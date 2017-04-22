@@ -23,10 +23,15 @@ $ sudo pip install twiki
 ## Configuration file (setup.cfg)
 
 ```
-auth:http_basic
-auth_user:psaavedra
-auth_password:verysecret
-url:https://localhost/
+[global]
+loglevel:20
+logfile:/dev/stdout
+url:http://localhost/twiki
+
+[auth]
+type:basic
+username:user
+password:pass
 ```
 where `url` is something like: ''https://wiki.igalia.com/twiki''.
 

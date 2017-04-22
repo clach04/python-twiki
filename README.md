@@ -12,7 +12,7 @@ auth_user:psaavedra
 auth_password:verysecret
 url:https://localhost/
 ```
-where `url` is something like: ''https://intranet.igalia.com/twiki''.
+where `url` is something like: ''https://wiki.igalia.com/twiki''.
 
 In other side, `auth` and `auth_*` settings refer to HTTP Basic
 authentication parameters, in necessary case.
@@ -48,7 +48,7 @@ where `list.csv` is something like this:
 
 ```
 
-## renaming Topics
+## Renaming Topics
 
 ```sh
 $ twiki-rename-topic -c setup.cfg -t WebName/WebTopic -n NewWebName/NewWebTopic

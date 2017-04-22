@@ -35,7 +35,7 @@ password:pass
 ```
 where `url` is something like: ''https://wiki.igalia.com/twiki''.
 
-In other hans, the `auth` settings refer to HTTP Basic
+In the other hand, the `auth` settings refer to HTTP Basic
 authentication parameters, in necessary case.
 
 ## Getting Topics from a Web

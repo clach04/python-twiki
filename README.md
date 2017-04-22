@@ -29,7 +29,7 @@ logfile:/dev/stdout
 url:http://localhost/twiki
 
 [auth]
-type:basic
+type:http_basic
 username:user
 password:pass
 ```

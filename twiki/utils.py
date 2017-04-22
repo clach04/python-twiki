@@ -17,13 +17,7 @@ def get_default_settings():
     settings["global"] = {
         "loglevel": 10,
         "logfile": "/dev/stdout",
-        "url": "http:/u/localhost/",
-        "dryrun": False
-    }
-    settings["auth"] = {
-        "type": "http_basic",
-        "username": "user",
-        "password": "password",
+        "url": "http://localhost/twiki/",
     }
     return settings
 
@@ -41,10 +35,20 @@ def set_setting(settings, s, k, v):
             settings[s][k] = v
 
     else:
+        if s not in settings:
+            settings[s] = {}
         settings[s][k] = v
 
 
 def setup(conffile, settings):
+    try:
+        reload(sys)
+        # Forcing UTF-8 in the enviroment:
+        sys.setdefaultencoding('utf-8')
+        # http://stackoverflow.com/questions/3828723/why-we-need-sys-setdefaultencodingutf-8-in-a-py-scrip
+    except Exception:
+        pass
+
     cfg = ConfigParser.ConfigParser()
     cfg.read(conffile)
     for s in cfg.sections():
@@ -91,24 +95,33 @@ class Twiki():
         self.logger = create_logger(settings)
         self.settings = settings
 
-    def do_get_action(self, str_, auth):
-        self.logger.debug(str_)
-        r = requests.get(str_, auth=auth)
-        return r
+    def get_auth(self):
+        if "auth" in self.settings:
+            return (self.settings["auth"]["username"],
+                    self.settings["auth"]["password"])
+        else:
+            return None
 
-    def do_post_action(self, str_, auth, data={}):
+    def do_get_action(self, str_):
         self.logger.debug(str_)
-        r = requests.post(str_,
-                          data=data,
-                          auth=auth)
-        return r
+        auth = self.get_auth()
+        if auth:
+            return requests.get(str_, auth=auth)
+        else:
+            return requests.get(str_)
+
+    def do_post_action(self, str_, data={}):
+        self.logger.debug(str_)
+        auth = self.get_auth()
+        if auth:
+            return requests.post(str_, data=data, auth=auth)
+        else:
+            return requests.post(str_, data=data)
 
     def get_topics(self, web):
-        auth = (self.settings["auth"]["username"],
-                self.settings["auth"]["password"])
         url = self.settings["global"]["url"]
         str_ = '%s/bin/view/%s/WebTopicList' % (url, web)
-        r = self.do_get_action(str_, auth)
+        r = self.do_get_action(str_)
         self.logger.info("Action %s - %s: %s" % ("gettopics",
                          web, r.status_code))
         res = []
@@ -119,26 +132,22 @@ class Twiki():
         return res
 
     def move_topic(self, topic, parent_topic):
-        auth = (self.settings["auth"]["username"],
-                self.settings["auth"]["password"])
         url = self.settings["global"]["url"]
         str_ = '%s/bin/save/%s?%s=%s' % (url,
                                          topic,
                                          "topicparent",
                                          parent_topic)
-        r = self.do_get_action(str_, auth)
+        r = self.do_get_action(str_)
         self.logger.info("Action %s - %s - %s: %s" % ("topicparent", topic,
                          parent_topic, r.status_code))
 
     def rename_topic(self, topic, new_topic):
-        auth = (self.settings["auth"]["username"],
-                self.settings["auth"]["password"])
         url = self.settings["global"]["url"]
         str_ = '%s/bin/rename/%s' % (url, topic)
 
         # Getting the list of topics to be updated with the new reference to
         # the content
-        r = self.do_get_action(str_, auth)
+        r = self.do_get_action(str_)
         referring_topics = []
         for l in r.content.split("\n"):
             if l.find('class="twikiTopRow"') > -1:
@@ -154,7 +163,7 @@ class Twiki():
         data["newtopic"] = new_topic_
         data["nonwikiword"] = "on"
         data["referring_topics"] = referring_topics
-        r = self.do_post_action(str_, auth, data)
+        r = self.do_post_action(str_, data)
         self.logger.info("Action %s - %s - %s: %s %s" % ("renametopic", topic,
                          new_topic, r.status_code, r.content))
         self.logger.debug("Result %s : %s" % ("renametopic", r.content))

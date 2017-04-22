@@ -6,17 +6,9 @@
 # Contact: psaavedra at igalia.com
 
 import argparse
-import sys
 from twiki import utils
 
-try:
-    reload(sys)
-    sys.setdefaultencoding('utf-8')  # Forcing UTF-8 in the enviroment:
-    # http://stackoverflow.com/questions/3828723/why-we-need-sys-setdefaultencodingutf-8-in-a-py-scrip
-except Exception:
-    pass
-
-## GLOBAL VARS #######################################################
+## vars ##############################################################
 conffile = "twiki.cfg"
 inputfile = "input.csv"
 topic = None
@@ -34,7 +26,6 @@ parser.add_argument("-p", "--parenttopic", dest="parent_topic",
 parser.add_argument("-t", "--topic", dest="topic",
                     default=topic,
                     help="Topic (default: %s)" % topic)
-
 a = parser.parse_args()
 
 # setting up #########################################################

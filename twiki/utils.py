@@ -41,15 +41,7 @@ def set_setting(settings, s, k, v):
             settings[s][k] = v
 
     else:
-        if s.startswith("org__"):
-            org_name = s[5:]
-            if org_name not in settings["org"]:
-                settings["org"][org_name] = {}
-            if k.startswith("team__"):
-                ldap_name = k[6:]
-                settings["org"][org_name][ldap_name] = v
-        else:
-            settings[s][k] = v
+        settings[s][k] = v
 
 
 def setup(conffile, settings):

@@ -68,6 +68,8 @@ where `list.csv` is something like this:
 
 ```sh
 $ twiki-rename-topic -c setup.cfg -t WebName/WebTopic -n NewWebName/NewWebTopic
+$ twiki-rename-topic -c setup.cfg -t WebName/WebTopic -n WebName/NewWebTopic
+$ twiki-rename-topic -c setup.cfg -t WebName/WebTopic -n NewWebName/WebTopic
 $ twiki-rename-topic -c setup.cfg -i list.csv
 ```
 

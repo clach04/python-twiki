@@ -2,6 +2,22 @@
 
 python-twiki is a bunch of tools which allow manage a TWiki.
 
+# Install
+
+## From the source
+
+```sh
+$ git clone https://github.com/psaavedra/python-twiki.git
+$ cd python-twiki
+$ sudo python setup.py install
+```
+
+## From PyPI
+
+```sh
+$ sudo pip install twiki
+```
+
 # Examples
 
 ## Configuration file (setup.cfg)

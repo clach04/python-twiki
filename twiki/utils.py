@@ -127,7 +127,7 @@ class Twiki():
         res = []
         for l in r.content.split("\n"):
             if l.find("twikiLink") > -1:
-                r = l.split('href="/twiki/bin/view/')[1].split('"')[0]
+                r = l.split('href="/bin/view/')[1].split('"')[0]
                 res.append(r)
         return res
 

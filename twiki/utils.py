@@ -127,8 +127,16 @@ class Twiki():
         res = []
         for l in r.content.split("\n"):
             if l.find("twikiLink") > -1:
-                r = l.split('href="/bin/view/')[1].split('"')[0]
-                res.append(r)
+                try:
+                    r = l.split('href="/bin/view/')[1].split('"')[0]
+                    res.append(r)
+                except IndexError:
+                    # we may have found a twikiLinkLabel
+                    if 'twikiLinkLabel' in l:
+                        pass  # so ignore it
+                    else:
+                        # unhandled
+                        raise
         return res
 
     def move_topic(self, topic, parent_topic):
